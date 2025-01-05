@@ -1,24 +1,28 @@
 package com.busanit501.bootproject.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@NoArgsConstructor
+@Table(name = "pet")
 public class Pet extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long petId; // 반려동물 ID
 
-    @Column(nullable = false)
-    private Long userId; // 사용자 ID (FK)
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user; // 반려동물의 주인 (User)
 
     @Column(length = 100, nullable = false)
     private String name; // 반려동물 이름
@@ -29,8 +33,8 @@ public class Pet extends BaseEntity {
     @Column(nullable = false)
     private LocalDate birth; // 생년월일
 
-    @Column(nullable = false)
-    private String gender; // 성별 (ENUM 가능)
+    @Enumerated(EnumType.STRING)
+    private Gender gender; // 반려동물 성별
 
     @Column(columnDefinition = "TEXT")
     private String personality; // 성격
@@ -43,5 +47,5 @@ public class Pet extends BaseEntity {
 
     @Column(nullable = false)
     private boolean isVerified; // 인증 여부
-}
 
+}

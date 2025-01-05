@@ -1,64 +1,47 @@
 package com.busanit501.bootproject.controller;
 
+import com.busanit501.bootproject.domain.Gallery;
 import com.busanit501.bootproject.dto.UserDTO;
+import com.busanit501.bootproject.repository.GalleryRepository;
+import com.busanit501.bootproject.service.GalleryService;
 import com.busanit501.bootproject.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 @Log4j2
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/profile")
 public class UserController {
 
     @Autowired
     private UserService userService;
     @Autowired
     private HttpSession session;
+    @Autowired
+    private GalleryService galleryService;
+    @Autowired
+    private GalleryRepository galleryRepository;
 
-    // 로그인 페이지
-    @GetMapping("/login")
-    public void login() {}
-    @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password, RedirectAttributes redirectAttributes) {
-        UserDTO user = userService.getUserByEmail(email);
-        if (user != null && user.getPassword().equals(password)) {
-            session.setAttribute("user", user); // 세션에 사용자 정보 저장
-            log.info("로그인 성공");
-            return "redirect:/users/main"; // main.html로 리다이렉션
-        }
-        log.info("로그인 실패");
-        redirectAttributes.addFlashAttribute("message", "이메일 또는 비밀번호가 잘못되었습니다.");
-        return "redirect:/users/login"; // 로그인 페이지로 리다이렉션
-    }
 
-    // 회원가입 페이지
-    @GetMapping("/signup")
-    public void signup() {}
-    @PostMapping("/signup")
-    public ResponseEntity<UserDTO> signup(@ModelAttribute UserDTO userDTO) {
-        userService.createUser(userDTO);
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .location(URI.create("/users/login"))
-                .build();
-        //리다이렉트로 데이터 탑재후 login페이지로 이동시키면 됌
-    }
+    @GetMapping("/gallery")
+    public void profile(@AuthenticationPrincipal UserDetails user, Long userId, Model model) {
+        List<Gallery> galleries = galleryRepository.findAll();
+        // UserDTO userDTO = userService.getUserById(userId);
+        //UserDTO userDTO = userService.getUserById(userId);
 
-    // 이메일 중복 확인
-    @PostMapping("/check-email")
-    public ResponseEntity<?> checkEmail(@RequestParam String email) {
-        boolean exists = userService.checkEmailExists(email);
-        return ResponseEntity.ok().body(Map.of("exists", exists));
+        model.addAttribute("user", user);
+        model.addAttribute("galleries", galleries);
+        // model.addAttribute("userDTO", userDTO);
+        //log.info("userDTO : " + userDTO);
     }
 
     // 사용자 생성 (Create)
@@ -96,8 +79,4 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/main")
-    public String mainPage(Model model) {
-        return "/main"; // main.html로 이동
-    }
 }

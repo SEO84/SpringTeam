@@ -21,5 +21,6 @@ public class UserDTO {
     private String phoneNumber;
     private float rating;
     private int ratingCount;
+
 }
 

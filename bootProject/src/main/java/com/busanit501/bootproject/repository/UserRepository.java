@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Long> {
     // 추가적인 쿼리 메소드 정의 가능
     User findByEmail(String email);
+
+
 }

@@ -21,12 +21,7 @@
     <div id="wrap">
         <div class="mainContent">
             <header id="header">
-                <form action="" method="post">
-                    <div class="search">
-                        <button type="submit" class="searchBtn"><img th:src="@{/img/search_bold.svg}"></button>
-                        <input type="text" name="" id="" placeholder="산책메이트">
-                    </div>
-                </form>
+                <div class="logo"><a th:href="@{/home}"><img th:src="@{/img/logo.svg}"></a></div>
                 <ul class="headMenu">
                     <li><a>동물병원</a></li>
                     <li><a>중고나눔</a></li>
@@ -34,8 +29,8 @@
                 </ul>
                 <ul class="headMember">
                     <!-- 로그아웃 -->
-                    <li class="headSignup"><a th:href="@{/users/signup}">회원가입</a></li>
-                    <li class="headLogin"><a th:href="@{/users/login}">로그인</a></li>
+                    <li class="headSignup"><a th:href="@{/member/signup}">회원가입</a></li>
+                    <li class="headLogin"><a th:href="@{/member/login}">로그인</a></li>
                 </ul>
             </header>
 

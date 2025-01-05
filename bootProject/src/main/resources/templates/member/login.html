@@ -7,17 +7,17 @@
     <div class="member-form login-member-form">
         <h2>로그인</h2>
         <p th:text="${message}" class="text-danger"></p>
-        <form method="post" th:action="@{/users/login}" id="login-form">
+        <form method="post" th:action="@{/member/login}" id="login-form">
             <div class="input-group">
-                <input type="email" name="email" placeholder="이메일" required autocomplete="off" class="">
+                <input type="email" name="email" placeholder="이메일" required autocomplete="off" class="" value="111@test.com">
             </div>
             <div class="input-group">
-                <input type="password" name="password" placeholder="비밀번호" required autocomplete="off" class="">
+                <input type="password" name="password" placeholder="비밀번호" required autocomplete="off" class="" value="111">
             </div>
             <div class="btn-box">
                 <button type="submit" class="btn btn-dark">로그인</button>
             </div>
-            <a th:href="@{/users/signup}" class="signupBtn">계정이 없으신가요?</a>
+            <a th:href="@{/member/signup}" class="signupBtn">계정이 없으신가요?</a>
         </form>
         <div class="social-login">
             <button type="button" class="btn kakao" id="kakaoLogin">

@@ -12,7 +12,7 @@
 
 
 .social-login {}
-.social-login .btn {display: flex; align-items: center;}
+.social-login .btn {justify-content: flex-start;}
 .social-login .btn:not(:last-child) {margin: 0 0 10px;}
 .social-login .btn.kakao {background: #FBE750; color: #000;}
 .social-login .btn.naver {background: #5BC467; color: #fff;}

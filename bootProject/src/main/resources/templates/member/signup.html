@@ -8,7 +8,7 @@
     <div class="member-form signup-member-form">
         <h2>회원가입</h2>
 
-        <form th:action="@{/users/signup}" method="post" id="signup-form">
+        <form th:action="@{/member/signup}" method="post" id="signup-form">
             <div class="form-group">
                 <div class="input-group">
                     <div class="input">
@@ -130,7 +130,7 @@
         const email = document.getElementById('email').value;
 
         $.ajax({
-            url: '/users/check-email',
+            url: '/member/check-email',
             type: 'POST',
             data: {email: email},
             success: function(response) {

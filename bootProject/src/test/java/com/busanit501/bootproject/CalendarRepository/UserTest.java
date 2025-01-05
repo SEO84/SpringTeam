@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Log4j2
 @SpringBootTest
@@ -29,14 +29,11 @@ public class UserTest {
                 .email("testuser@testemail.com") // 겹치면 안됨
                 .password("123123")
                 .name("효정")
-                .age(29)
-                .gender(Gender.FEMALE)
+                .birth(LocalDate.now())
+                .gender(String.valueOf(Gender.FEMALE))
                 .address("부산시")
                 .profilePicture("http://example.com/profile.jpg")
                 .phoneNumber("010-1234-5678")
-                .isVerified(true)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
                 .build();
 
         // 사용자 저장
@@ -46,4 +43,5 @@ public class UserTest {
         }
         log.info("user sabed with id:" +savedUser.getUserId());
     }
+
 }

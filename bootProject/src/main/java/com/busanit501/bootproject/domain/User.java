@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString
 public class User extends BaseEntity{
-
     @Id
     @Column(length = 50, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
