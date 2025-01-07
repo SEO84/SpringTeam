@@ -1,4 +1,4 @@
-//  설치3번, 순서1 Querydsl 사용하기 위한 변수 설정.
+// 설치3번, 순서1 Querydsl 사용하기 위한 변수 설정.
 buildscript {
     ext {
         queryDslVersion = "5.0.0"
@@ -24,6 +24,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    querydsl.extendsFrom compileClasspath
 }
 
 repositories {
@@ -41,84 +42,57 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    // 부트 프로젝트 생성시, 초기에 설치한 라이브러리
 
     //1 롬복, 테스트 환경에서 동작하기.
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
     //2 타임리프, 공통 레이아웃 작업하는 동구.
-    implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.1.0'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
 
-    //3, 순서2 Querydsl 이용해서, 동적 sql 다루고, 빌드 패턴이용하고, 자바의 컴파일러 문법 체크 도움도 받기.
+    //3, 순서2 Querydsl 설정
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
 
-    // 4, 순서4 Querydsl 설정.
+    // 4, 순서4 Querydsl 추가 설정
     annotationProcessor(
             "jakarta.persistence:jakarta.persistence-api",
             "jakarta.annotation:jakarta.annotation-api",
             "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
     )
 
-    // 5, DTO <-> VO(엔티티클래스) 변환기, 필요.
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.1'
+    // 5, DTO <-> VO(엔티티클래스) 변환기
+    implementation 'org.modelmapper:modelmapper:3.2.1'
 
-    // 6
-    // 서버 입장에서 입력된 데이터 유효성 검증 도구
-    // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
-    // 레거시 버전의 유효성 도구인데, 동작 안해서, 버전 변경
-//    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.2.1.Final'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.4.0'
+    // 6 서버 입장에서 입력된 데이터 유효성 검증 도구
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.0'
 
-    // 7
-    // Rest 테스트 도구, 스웨거 설치,
-    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
-    // implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
-    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.7.0'
-    // 9
-    // 타임리프의 추가 기능, 시큐리티 연동해서, 권한별 화면 표시 하기.
-    // https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6
-    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity6', version: '3.1.3.RELEASE'
+    // 7 Rest 테스트 도구, 스웨거 설치
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 
-    // BCrypt Password Encoder
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-
-    // 8
-    // 원본 이미지 -> 작은 이미지 변환 도구,
-    // https://mvnrepository.com/artifact/net.coobird/thumbnailator
-    implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.20'
-
-    // 9
-    // 시큐리티 설치.
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.4.0'
-
-    // 10
-    // 타임리프의 추가 기능, 시큐리티 연동해서, 권한별 화면 표시 하기.
-    // https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6
-    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity6', version: '3.1.3.RELEASE'
-
-    // 11
-    // 카카오 로그인 도구
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client', version: '3.4.0'
-
-
+    // 8 원본 이미지 -> 작은 이미지 변환 도구
+    implementation 'net.coobird:thumbnailator:0.4.20'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-// Querydsl  설치, 순서3 프로젝트를 빌드 할 때마다, 해당 Q 도메인을 소스로 등록하는 과정을, 자동으로
-sourceSets {
+// Querydsl 설정
+def querydslDir = "$buildDir/generated/querydsl"
 
+sourceSets {
     main {
         java {
-            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+            srcDirs = ["$projectDir/src/main/java", querydslDir]
         }
     }
 }
 
-compileJava.dependsOn('clean')
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
+}
+
+// clean 태스크와 함께 생성된 QClass 삭제
+clean {
+    delete file(querydslDir)
+}

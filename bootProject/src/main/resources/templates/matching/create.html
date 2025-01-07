@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>매칭방 생성</title>
+    <link rel="stylesheet" th:href="@{/css/create.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding: 20px; }
+        h1 { margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .btn { margin-right: 10px; }
+    </style>
+</head>
+<body>
+<h1>매칭방 생성</h1>
+<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+<!-- 디버그 표시 (임시) -->
+<!--<p>Debug - meetingTime: <span th:text="${matchingRoomDTO.meetingTime}">&#45;&#45;:&#45;&#45;</span></p>-->
+
+<form th:action="@{/matching/create}" th:object="${matchingRoomDTO}" method="post">
+    <div class="form-group">
+        <label for="title">제목</label>
+        <input type="text" id="title" th:field="*{title}" class="form-control" required>
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="description">설명</label>
+        <textarea id="description" th:field="*{description}" class="form-control" rows="3" required></textarea>
+        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="place">장소</label>
+        <input type="text" id="place" th:field="*{place}" class="form-control" required>
+        <span th:if="${#fields.hasErrors('place')}" th:errors="*{place}" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="meetingDate">날짜</label>
+        <input type="date" id="meetingDate" th:field="*{meetingDate}" class="form-control" required>
+        <span th:if="${#fields.hasErrors('meetingDate')}" th:errors="*{meetingDate}" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="meetingTime">시간</label>
+        <!-- th:value 제거 -->
+        <input type="time" id="meetingTime" th:field="*{meetingTime}" class="form-control" required>
+        <span th:if="${#fields.hasErrors('meetingTime')}" th:errors="*{meetingTime}" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="maxParticipants">최대 참가 인원</label>
+        <input type="number" id="maxParticipants" th:field="*{maxParticipants}" class="form-control" min="1" max="100" required>
+        <span th:if="${#fields.hasErrors('maxParticipants')}" th:errors="*{maxParticipants}" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="petIds">참가할 반려동물 선택</label>
+        <select id="petIds" th:field="*{petIds}" class="form-control" multiple required>
+            <option th:each="pet : ${userPets}" th:value="${pet.petId}" th:text="${pet.name}"></option>
+        </select>
+        <span th:if="${#fields.hasErrors('petIds')}" th:errors="*{petIds}" class="text-danger"></span>
+    </div>
+
+    <div id="additionalPetsContainer" class="form-group mt-3">
+        <!-- 추가 반려동물 선택 필드가 여기에 동적으로 추가됩니다 -->
+    </div>
+
+    <div class="form-group mt-4">
+        <button type="button" class="btn btn-secondary" onclick="addPetSelection()">추가 반려동물 선택</button>
+        <button type="submit" class="btn btn-primary">매칭방 생성</button>
+        <a th:href="@{/matching/list}" class="btn btn-secondary">취소</a>
+    </div>
+</form>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let userPets = /*[[${userPets}]]*/ [];
+    /*]]>*/
+</script>
+<script th:src="@{/js/create.js}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- JavaScript to set meetingTime on page load (디버깅 용도) -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the meetingTime value from the debug output
+        const meetingTimeElement = document.querySelector('span[th\\:text="${matchingRoomDTO.meetingTime}"]');
+        if (meetingTimeElement) {
+            const meetingTimeText = meetingTimeElement.innerText;
+            if (meetingTimeText && meetingTimeText !== '--:--') {
+                document.getElementById('meetingTime').value = meetingTimeText;
+            }
+        }
+    });
+</script>
+</body>
+</html>
