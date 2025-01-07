@@ -43,14 +43,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    //1 롬복, 테스트 환경에서 동작하기.
+    // 1 롬복, 테스트 환경에서 동작하기.
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    //2 타임리프, 공통 레이아웃 작업하는 동구.
+    // 2 타임리프, 공통 레이아웃 작업하는 동구.
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
 
-    //3, 순서2 Querydsl 설정
+    // 3, 순서2 Querydsl 설정
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
 
     // 4, 순서4 Querydsl 추가 설정
@@ -60,7 +60,7 @@ dependencies {
             "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
     )
 
-    // 5, DTO <-> VO(엔티티클래스) 변환기
+    // 5 DTO <-> VO(엔티티클래스) 변환기
     implementation 'org.modelmapper:modelmapper:3.2.1'
 
     // 6 서버 입장에서 입력된 데이터 유효성 검증 도구
@@ -71,6 +71,13 @@ dependencies {
 
     // 8 원본 이미지 -> 작은 이미지 변환 도구
     implementation 'net.coobird:thumbnailator:0.4.20'
+
+    // 9 시큐리티 설치 및 타임리프 연동
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.3.RELEASE'
+
+    // 10 카카오 로그인 도구
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.4.0'
 }
 
 tasks.named('test') {
@@ -96,3 +103,6 @@ tasks.withType(JavaCompile) {
 clean {
     delete file(querydslDir)
 }
+
+// Querydsl 설치, 순서3 프로젝트를 빌드 할 때마다, 해당 Q 도메인을 소스로 등록
+compileJava.dependsOn('clean')
